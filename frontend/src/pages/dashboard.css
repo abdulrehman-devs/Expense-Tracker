@@ -1,0 +1,75 @@
+body {
+    background: linear-gradient(to right, #e0f7fa, #f1fdfd);
+}
+
+.main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 70px 60px;
+}
+
+.btn {
+    padding: 8px 12px;
+    background-color: #0da094;
+    border-radius: 12px;
+    font-weight: 600;
+    color: white;
+}
+
+.fetch-data ul li {
+    margin: 30px 30px;
+    padding: 200px;
+}
+
+.fetch-data ul strong {
+    color: #0da094;
+}
+
+.main .total-balance {
+    font-weight: 600;
+    font-size: 24px;
+}
+
+.del-txn {
+    border-radius: 5px;
+    padding: 8px 14px;
+    color: white;
+    background-color: #0da094;
+    margin: 25px 0 15px 0px;
+    border: none;
+    font-size: 12px;
+}
+
+.del-txn:hover {
+    background-color: rgb(214, 9, 9);
+    transition: 0.2s ease-in-out;
+}
+
+@media screen and (max-width: 500px) {
+    .main {
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        gap: 30px;
+    }
+
+    .main .total-balance {
+        font-size: 22px;
+    }
+
+    .fetch-data ul {
+        margin: 20px 35px;
+        padding: 0;
+        align-content: center;
+    }
+
+    .fetch-data ul li {
+        padding: 20px 0;
+        margin: 30px 0;
+    }
+
+    .fetch-data ul p {
+        font-weight: 500;
+    }
+}
