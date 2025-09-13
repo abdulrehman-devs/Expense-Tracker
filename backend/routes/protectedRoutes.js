@@ -65,6 +65,7 @@ router.post("/transaction", auth, async (req, res) => {
 
 router.delete("/:id", auth, async (req, res) => {
     const { id } = req.params;
+    const userId = req.user.id; // ✅ correct
 
     try {
         const deletedTxn = await Transaction.findByIdAndDelete(id);
@@ -73,7 +74,21 @@ router.delete("/:id", auth, async (req, res) => {
             return res.status(404).json({ message: "Transaction not found" });
         }
 
-        res.status(200).json({ message: "Deleted Transaction" });
+        const user = await Signup.findById(userId);
+
+        if (deletedTxn.type === 'add') {
+            user.totalBalance -= deletedTxn.amount;
+        } else if (deletedTxn.type === 'expense') {
+            user.totalBalance += deletedTxn.amount;
+        }
+
+        await user.save(); // ✅ persist changes
+
+        res.status(200).json({
+            message: "Deleted Transaction",
+            newBalance: user.totalBalance
+        });
+
     } catch (error) {
         res.status(500).json({ message: "Error deleting transaction", error });
     }
