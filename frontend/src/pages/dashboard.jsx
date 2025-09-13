@@ -11,6 +11,11 @@ const Dashboard = () => {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
 
+    const token = localStorage.getItem("token")
+    if (!token) {
+        navigate("/")
+    }
+
     const onClose = () => {
         setIsOpen(false);
     };
@@ -20,6 +25,7 @@ const Dashboard = () => {
         setIsLoggedIn(false);
         navigate("/");
     };
+
 
     const fetchData = async () => {
         const token = localStorage.getItem("token");
@@ -47,36 +53,25 @@ const Dashboard = () => {
         const token = localStorage.getItem("token");
 
         try {
-            await axios.delete(`http://localhost:2000/dashboard/${id}`, {
+            const res = await axios.delete(`http://localhost:2000/dashboard/${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
+
             console.log("Deleted");
 
-            setData((prevData) => {
-                const deletedTxn = prevData.userDetails.find((txn) => txn._id === id);
+            setData((prevData) => ({
+                ...prevData,
+                userDetails: prevData.userDetails.filter((txn) => txn._id !== id),
+                totalBalance: res.data.newBalance,
+            }));
 
-                if (!deletedTxn) return prevData; 
-
-                let newBalance = prevData.totalBalance;
-
-                if (deletedTxn.type === "add") {
-                    newBalance -= deletedTxn.amount; 
-                } else {
-                    newBalance += deletedTxn.amount; 
-                }
-
-                return {
-                    ...prevData,
-                    userDetails: prevData.userDetails.filter((txn) => txn._id !== id),
-                    totalBalance: newBalance,
-                };
-            });
         } catch (e) {
             console.log("Error Deleting the transaction", e);
         }
     };
+
 
 
 
@@ -95,7 +90,7 @@ const Dashboard = () => {
                         Make Transaction
                     </button>
                 </div>
- 
+
             </div>
 
             <div className="fetch-data p-6">
